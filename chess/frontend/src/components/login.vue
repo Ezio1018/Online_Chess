@@ -94,7 +94,7 @@
         } else {
           let formData = new FormData();
             formData.append('select_username', value);
-          this.$axios.post('/apis/api/register?select=1', formData)
+          this.$axios.post('http://127.0.0.1:8000/register?select=1', formData)
             .then(response => {
               if (response.data.is_indb === 1) {
                 callback(new Error('该用户名已经被注册'))
@@ -189,7 +189,7 @@
               formData.append('gender', this.addForm.gender);
 
             // 成功.
-            this.$axios.post('/apis/api/register', formData
+            this.$axios.post('http://127.0.0.1:8000/api/register', formData
             )
               .then(response => {
                 if (response.data.status === 0) {
@@ -215,7 +215,7 @@
         this.$refs[Dataset].validate((valid) => {
           if (valid) {
             // 成功
-            this.$axios.post("apis/api/login", {
+            this.$axios.post("http://127.0.0.1:8000/api/login", {
               username: this.loginform.userNumber,
               password: this.loginform.password,
             })

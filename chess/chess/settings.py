@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-apqrj0lj_s6fp7%$=1&hc6f-g&-#+3eabj8hfd(ua@3$ic#qc1
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -43,12 +43,6 @@ INSTALLED_APPS = [
     'game',
 ]
 
-CORS_ORIGIN_WHITELIST = (
-    'http://127.0.0.1:8080',
-    'http://localhost:8080',
-    'http://IP:8080',
-    'http://IP:8000'
-)
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -88,12 +82,12 @@ ASGI_APPLICATION = 'chess.routing.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql', # 数据库引擎
-        'NAME': 'chess', # 数据库名
-        'USER': 'root', # 账号
-        'PASSWORD': '123456', # 密码
-        'HOST': '127.0.0.1', # HOST
-        'POST': 3306, # 端口
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'chess',        #数据库名字
+        'USER': 'root',          #账号
+        'PASSWORD': 'alliance',
+        'HOST': '101.133.237.186',    #IP
+        'PORT': '3306',                     #端口
 
     }
 }
@@ -141,6 +135,9 @@ USE_L10N = True
 
 USE_TZ = True
 
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "frontend/dist/static"),
+]
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/

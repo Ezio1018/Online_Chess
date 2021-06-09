@@ -7,6 +7,6 @@ from game.consumers import GameConsumer
 
 application = ProtocolTypeRouter({
     "websocket": URLRouter([
-            path(r'game/<int:game_id>/<username>', GameConsumer.as_asgi()),
+            path(r'game/<int:game_id>/<username>', GameConsumer),
         ]),
 })

@@ -63,6 +63,7 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
         )
     
     async def online_opp(self,event):
+        print(11111)
         if self.channel_name != event['sender_channel_name']:
             await self.send_json({
                 "command":"opponent-online",
@@ -70,8 +71,9 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
 
 
     async def new_move(self, source, target,fen,pgn):
+        print(source)
         await self.channel_layer.group_send(#向频道房间发送移动棋子信息
-            "default",
+            str(self.game_id),
             {
                 "type": "move.new",
                 "source": source,
@@ -83,7 +85,10 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
         )
     
     async def move_new(self, event):
+        print(event['sender_channel_name'])
+        print(self.channel_name)
         if self.channel_name != event['sender_channel_name']:
+            print(22222)
             await self.send_json({
                 "command":"new-move",
                 "source": event["source"],
