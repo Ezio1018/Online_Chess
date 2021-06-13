@@ -23,7 +23,7 @@
         </el-table-column>
         <el-table-column label="操作" min-width="100">
           <template slot-scope="scope"><!--作用域插槽-->
-            <el-button type="primary" icon="el-icon-check" size="mini" @click="joinGame(scope.row.id)"></el-button>
+            <el-button type="primary" icon="el-icon-check" size="mini" @click="joinGame(scope.row.id,scope.row.time)"></el-button>
           </template>
         </el-table-column>
 
@@ -46,9 +46,10 @@
       this.showGame()
     },
     methods: {
-      joinGame(pk){
+      joinGame(pk,time){
           this.$router.push({path: '/game'});
           localStorage.id = pk;
+          localStorage.time = time;
           localStorage.guest=true;
           window.location.reload();
       },

@@ -1,16 +1,14 @@
 <template>
   <div id="chess">
-        <!-- <el-button type="primary"  @click="copyText">注册</el-button> -->
-        <h1 v-if="show">等待对手加入房间。。。。。。</h1>
     <!-- <chessboard @onMove="showInfo"/> -->
   <div id="left">
+	<h1> 黑方 </h1>
 	<h1> {{ left }} </h1>
-	</div>
-
-	<div id="right">
+  <h1>——VS——</h1>
+	<h1> 白方 </h1>
 	<h1> {{ right }} </h1>
 	</div>
-    <newboard/>
+    <newboard ref="time"></newboard>
 
     </div>
 </template>
@@ -25,10 +23,10 @@ export default {
 
   data () {
     return {
-      left:'05:00',
-      right:'05:00',
-      lLeftTime: 5 * 60 * 1000,
-      rLeftTime: 5 * 60 * 1000,
+      left:'00:00',
+      right:'00:00',
+      lLeftTime: localStorage.time *60* 1000,
+      rLeftTime:  localStorage.time * 60 * 1000,
       flag: 1,
       show:true,
       currentFen: '',
@@ -36,6 +34,21 @@ export default {
       message: "",
       toFather:""
     }
+  },
+  mounted(){
+    this.$refs['time'].$on('func',(msg)=>{
+                console.log(msg);
+                if(msg=='white'){
+                  this.flag = 2
+                  this.leftCountDown()
+                }
+                else
+                {
+                  this.flag = 1
+                  this.rightCountDown()
+                }
+
+            })
   },
   methods: {
       
@@ -48,7 +61,14 @@ export default {
         this.m = Math.floor(this.lLeftTime / 1000 / 60 % 60);
         this.s = Math.floor(this.lLeftTime / 1000 % 60);
       }
-      
+      if(this.lLeftTime==0){
+         this.$notify({
+                  title: "白方胜利",
+            });
+          this.$router.push({path: '/home'});
+          localStorage.id = 0
+          window.location.reload();
+      }
       if(this.flag % 2 == 0 && this.lLeftTime > 0) {
         setTimeout(this.leftCountDown, 1000);	
           }
@@ -68,7 +88,14 @@ export default {
         this.s = Math.floor(this.rLeftTime / 1000 % 60);
       }
       
-      
+       if(this.lLeftTime==0){
+         this.$notify({
+                  title: "黑方胜利",
+              });
+          this.$router.push({path: '/game'});
+          localStorage.id = 0
+          window.location.reload();
+      }
       if(this.flag % 2 == 1 && this.rLeftTime > 0) {
         setTimeout(this.rightCountDown, 1000);	
           }
@@ -76,15 +103,6 @@ export default {
       this.right = this.h + ':' + this.m + ':' + this.s
     },
       
-    start(){
-      this.flag += 1
-      if(this.flag % 2 == 0){
-        this.leftCountDown()
-          }
-      else{
-        this.rightCountDown()
-          }	
-    },
     copyText(){
         this.show=false;
     },
@@ -103,25 +121,22 @@ export default {
     }
     },
     created() {
+        this.time=localStorage.time;
+        console.log(localStorage.time)
         this.isonline=localStorage.isonline;
-        if(localStorage.guest){
-          this.show=false;
-        }
         this.user_id = localStorage.user_id;
+        // this.lLeftTime= this.time *60* 1000;
+        // this.rLeftTime= this.time * 60 * 1000;
     },
 }
 </script>
 <style scoped>
   #left{
-    position:absolute;
+    position:relative;
    font-size:42;
-    left:35%;
+    left:9%;
     top:20%;
-  }
-  #right{
-    position:absolute;
-   font-size:42;
-    left:35%;
-    bottom:40%;
-  }
+      display: flex;
+
+  }  
 </style>

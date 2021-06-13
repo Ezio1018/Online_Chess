@@ -17,9 +17,9 @@
             <!--:before-close="handleClose">-->
             <!--内容主体区域,ref是引用对象名-->
             <el-form :model="addForm" ref="addFormRef" label-width="70px">
-                <el-form-item label="指定对手">
+                <!-- <el-form-item label="指定对手">
                     <el-input v-model="addForm.opponentid"></el-input>
-                </el-form-item>
+                </el-form-item> -->
                 <el-form-item label="对局时间" >
                     <el-select v-model="addForm.time" style="display: block;">
                         <el-option label="3min" value="3"></el-option>
@@ -93,7 +93,7 @@ export default {
      submit(){
             let formData = new FormData();
             formData.append('userid', this.user_id);
-            formData.append('opponentid', this.addForm.opponentid);
+            // formData.append('opponentid', this.addForm.opponentid);
             formData.append('time', this.addForm.time);
             formData.append('regret', this.addForm.regret);
             formData.append('color', this.addForm.color);
@@ -108,6 +108,7 @@ export default {
                 });
                 this.$router.push({path: '/game'});
                 localStorage.id = response.data.id
+                localStorage.time = this.addForm.time
                 window.location.reload();
               } else {
                 return false

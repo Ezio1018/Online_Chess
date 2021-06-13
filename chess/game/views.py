@@ -122,7 +122,7 @@ def register(request):
 def room(request):
     if request.method == "POST":
         userid = request.POST.get("userid")
-        opponentid = request.POST.get("opponentid")
+        # opponentid = request.POST.get("opponentid")
         time = request.POST.get("time")
         regret = request.POST.get("regret")
         color=request.POST.get("color")
@@ -130,10 +130,10 @@ def room(request):
         print(time)
         print(regret)
         print(color)
-        if userid is not None and time is not None and regret is not None  and color is not None and opponentid is not None:
+        if userid is not None and time is not None and regret is not None  and color is not None :
             try:
                 game=models.Game()
-                game.opponent_id=opponentid
+                # game.opponent_id=opponentid
                 game.owner_id=userid
                 game.owner_side=color
                 game.time=time
@@ -162,9 +162,9 @@ def show_game(request):
     user_id = request.GET.get('user_id','')
     try:
         if user_id == '':
-            games = Game.objects.filter()
+            games = Game.objects.filter(owner_online=True)
         else:
-            games = Game.objects.filter(owner_id = user_id)
+            games = Game.objects.filter(owner_id = user_id,owner_online=True)
         response['list'] = GameInfoSerializer(games,many=True).data
         response['msg'] = 'success'
         response['error_num'] = 0

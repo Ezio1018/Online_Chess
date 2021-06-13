@@ -26,7 +26,7 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
         print(3)
 
         if side[2]:
-            await self.opp_online()
+            await self.opp_online(side)
 
     async def receive_json(self, content):#从websocket接受指令
         command = content.get("command", None)#从command中拿
@@ -53,12 +53,13 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
         })
 
 
-    async def opp_online(self):
+    async def opp_online(self,data):
         await self.channel_layer.group_send(
             str(self.game_id),
             {
                 "type": "online.opp",
-                'sender_channel_name': self.channel_name
+                'sender_channel_name': self.channel_name,
+                "name":data[3]
             }
         )
     
@@ -67,6 +68,7 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
         if self.channel_name != event['sender_channel_name']:
             await self.send_json({
                 "command":"opponent-online",
+                "name":event["name"]
             })
 
 
@@ -110,6 +112,9 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
             return False
         side = "white"
         opp=False
+        print(game.opponent_id)
+        if(game.opponent_id==None and userid!=game.owner_id):
+            game.opponent_id=user.user_id
         if game.opponent_id == user.user_id:
             game.opponent_online = True
             if game.owner_side == "white":
@@ -131,7 +136,7 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
         else:
             return False
         game.save()
-        return [side,game.fen,opp]
+        return [side,game.fen,opp,user.user_id]
 
     @database_sync_to_async
     def disconn(self):

@@ -7,7 +7,6 @@ import login from '@/components/login'
 import chessboard from '@/components/chessboard'
 import firsthop from '@/components/firsthop'
 import lobby from '@/components/lobby'
-import time from '@/components/time'
 
 
 

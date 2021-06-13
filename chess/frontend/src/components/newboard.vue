@@ -9,6 +9,7 @@ export default {
     userPlay() {
       return (orig, dest) => {
         if(this.c==this.toColor()){
+        this.$emit('func',this.c);
         if (this.isPromotion(orig, dest)) {
           this.promoteTo = this.onPromotion();
         }
@@ -86,11 +87,18 @@ export default {
         // this.online="true"
         console.log("opponent join the room");
         localStorage.isonline = this.online
+        this.$notify({
+                  title: data.name+"加入游戏",
+              });
         // this.show=false;
         // this.game.load_pgn("1. e4 e5 2. Nf3 Nc6 3. Bc4 Bc5 {giuoco piano} *")
       }
       else if(data.command=="new-move") {
+          this.cc=this.toColor()
+        
           this.NextMove(data.source, data.target);
+        this.$emit('func',this.cc);
+
           // this.online="true"
       }
     },
@@ -105,6 +113,7 @@ export default {
        this.gameid=localStorage.id
        this.user_id = localStorage.user_id;
        this.c="white";
+       this.cc;
        this.online="false";
   },
   mounted() {
