@@ -10,6 +10,7 @@ from django.contrib import messages
 from .models import Game
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+from .serializers import GameInfoSerializer
 
 def game(request, game_id):
     game = get_object_or_404(Game,pk=game_id)
@@ -118,4 +119,56 @@ def register(request):
             "message": "error method"
         })
 
+def room(request):
+    if request.method == "POST":
+        userid = request.POST.get("userid")
+        opponentid = request.POST.get("opponentid")
+        time = request.POST.get("time")
+        regret = request.POST.get("regret")
+        color=request.POST.get("color")
+        print(userid)
+        print(time)
+        print(regret)
+        print(color)
+        if userid is not None and time is not None and regret is not None  and color is not None and opponentid is not None:
+            try:
+                game=models.Game()
+                game.opponent_id=opponentid
+                game.owner_id=userid
+                game.owner_side=color
+                game.time=time
+                game.save()
+                print(game.id)
+                return JsonResponse({
+                    "status": 0,
+                    "message": "game Success",
+                    "id":game.id
+                })
+            except:
+                return JsonResponse({
+                    "status": 2,
+                    "message": "game failed"
+                })
 
+    else:
+        return JsonResponse({
+            "status": 1,
+            "message": "error method"
+        })
+
+@require_http_methods(["GET"])
+def show_game(request):
+    response = {}
+    user_id = request.GET.get('user_id','')
+    try:
+        if user_id == '':
+            games = Game.objects.filter()
+        else:
+            games = Game.objects.filter(owner_id = user_id)
+        response['list'] = GameInfoSerializer(games,many=True).data
+        response['msg'] = 'success'
+        response['error_num'] = 0
+    except  Exception as e:
+        response['msg'] = str(e)
+        response['error_num'] = 1
+    return JsonResponse(response)

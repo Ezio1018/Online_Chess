@@ -48,7 +48,7 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
         await self.send_json({
             "command":"join",
             "orientation": data[0],
-            "pgn": data[1],
+            "fen": data[1],
             "opp_online": data[2]
         })
 
@@ -131,7 +131,7 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
         else:
             return False
         game.save()
-        return [side,game.pgn,opp]
+        return [side,game.fen,opp]
 
     @database_sync_to_async
     def disconn(self):

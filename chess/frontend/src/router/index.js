@@ -2,10 +2,15 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import home from '../components/home.vue'
-
+import game from '@/components/game'
 import login from '@/components/login'
 import chessboard from '@/components/chessboard'
 import firsthop from '@/components/firsthop'
+import lobby from '@/components/lobby'
+import time from '@/components/time'
+
+
+
 
 Vue.use(Router)
 export default new Router({
@@ -19,6 +24,8 @@ export default new Router({
       children: [
         {path: '/firsthop', component: firsthop},
         {path: '/chessboard', component: chessboard},
+        {path: '/game', component: game},
+        {path: '/lobby', component: lobby},
       ]
     }
   ]

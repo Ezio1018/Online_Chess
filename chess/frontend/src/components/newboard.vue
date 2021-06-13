@@ -1,13 +1,13 @@
+
 <script>
 import { chessboard }  from 'vue-chessboard'
+
 export default {
   name: 'newboard',
   extends: chessboard,
   methods: {
     userPlay() {
       return (orig, dest) => {
-        console.log(this.c);
-        console.log(this.toColor());
         if(this.c==this.toColor()){
         if (this.isPromotion(orig, dest)) {
           this.promoteTo = this.onPromotion();
@@ -50,7 +50,7 @@ export default {
     },
     initWebSocket() {
       var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
-      var ws_path = ws_scheme + "://127.0.0.1:8000/game/1/"+this.user_id;
+      var ws_path = ws_scheme + "://127.0.0.1:8000/game/"+this.gameid+"/"+this.user_id;
       console.log(ws_path);
       this.socket = new WebSocket(ws_path);
       this.socket.onmessage = this.websocketonmessage;
@@ -68,18 +68,30 @@ export default {
       console.log("Got websocket message " + message.data);
       var data = JSON.parse(message.data);
       if (data.command=="join") {
+        
         this.c=data.orientation;
+        this.game.load(data.fen)
       this.board.set({
+          fen: this.game.fen(),
+         turnColor: this.toColor(),
+          movable: {
+            color: this.toColor(),
+            dests: this.possibleMoves(),
+          },
       orientation:data.orientation,
-       movable: { events: { after: this.userPlay() } },
       })
         console.log("joining room as "+data.orientation)
       }
       else if(data.command=="opponent-online"){
+        // this.online="true"
         console.log("opponent join the room");
+        localStorage.isonline = this.online
+        // this.show=false;
+        // this.game.load_pgn("1. e4 e5 2. Nf3 Nc6 3. Bc4 Bc5 {giuoco piano} *")
       }
       else if(data.command=="new-move") {
           this.NextMove(data.source, data.target);
+          // this.online="true"
       }
     },
     websocketsend(Data){//数据发送
@@ -90,12 +102,24 @@ export default {
     },
   },
   created(){
+       this.gameid=localStorage.id
        this.user_id = localStorage.user_id;
        this.c="white";
+       this.online="false";
   },
   mounted() {
     this.initWebSocket();
-    
+     this.board.set({
+      movable: { events: { after: this.userPlay()} },
+    })
   }
 }
 </script>
+<style scoped>
+.cg-board-wrap {
+  width: 600px;
+  height: 600px;
+  position: relative;
+  display: block;
+}
+</style>

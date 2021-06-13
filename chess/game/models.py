@@ -23,16 +23,18 @@ class User(models.Model):
             verbose_name_plural = '用户'
 
 class Game(models.Model):
+    id = models.AutoField(primary_key=True)
     owner_id = models.CharField(max_length=50, verbose_name="id")
-    opponent_id = models.CharField(max_length=50, verbose_name="id")
+    opponent_id = models.CharField(max_length=50, verbose_name="id",null=True, blank=True)
     owner_side= models.CharField(max_length=10, default="white")
     owner_online = models.BooleanField(default=False)
     opponent_online = models.BooleanField(default=False)
-    fen = models.CharField(max_length=92, null=True, blank=True)
+    fen = models.CharField(max_length=92, default="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
     pgn = models.TextField(null=True, blank=True)
+    time = models.CharField(max_length=10,null=True, blank=True)
     winner = models.CharField(max_length=50, verbose_name="id",null=True, blank=True)
     CHOICES=(
-        (1,"Game Created. Waiting for opponent"),
-        (2,"Game Started"),
-        (3,"Game Ended"))
+        (1,"等待对手"),
+        (2,"游戏开始"),
+        (3,"游戏结束"))
     status = models.IntegerField(default=1,choices=CHOICES)
