@@ -7,6 +7,8 @@ import login from '@/components/login'
 import chessboard from '@/components/chessboard'
 import firsthop from '@/components/firsthop'
 import lobby from '@/components/lobby'
+import mobilegame from '@/components/mobilegame'
+
 
 
 
@@ -25,6 +27,7 @@ export default new Router({
         {path: '/chessboard', component: chessboard},
         {path: '/game', component: game},
         {path: '/lobby', component: lobby},
+        {path: '/mobilegame', component: mobilegame},
       ]
     }
   ]

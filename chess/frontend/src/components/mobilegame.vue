@@ -8,16 +8,16 @@
 	<h1> 白方 </h1>
 	<h1> {{ right }} </h1>
 	</div>
-    <newboard ref="time"></newboard>
+    <smallboard ref="time"></smallboard>
     </div>
 </template>
 <script>
 import 'vue-chessboard/dist/vue-chessboard.css'
-import newboard from './newboard.vue'
+import smallboard from './smallboard.vue'
 export default {
   name: 'chess',
   components: {
-    newboard,
+    smallboard,
   },
 
   data () {

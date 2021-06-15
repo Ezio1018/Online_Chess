@@ -23,7 +23,8 @@
         </el-table-column>
         <el-table-column label="操作" min-width="100">
           <template slot-scope="scope"><!--作用域插槽-->
-            <el-button type="primary" icon="el-icon-check" size="mini" @click="joinGame(scope.row.id,scope.row.time)"></el-button>
+            <el-button type="primary" icon="el-icon-check" size="mini" @click="ismobile=false;joinGame(scope.row.id,scope.row.time);"></el-button>
+            <el-button type="success" icon="el-icon-check" size="mini" @click="ismobile=true;joinGame(scope.row.id,scope.row.time)"></el-button>
           </template>
         </el-table-column>
 
@@ -38,6 +39,7 @@
     name: 'home',
     data () {
       return {
+        ismobile:false,
         input_user_id: '',
         gamelist: [],
       }
@@ -47,7 +49,12 @@
     },
     methods: {
       joinGame(pk,time){
+          if(this.ismobile){
+          this.$router.push({path: '/mobilegame'});
+          }
+          else{
           this.$router.push({path: '/game'});
+          }
           localStorage.id = pk;
           localStorage.time = time;
           localStorage.guest=true;
@@ -68,6 +75,10 @@
             }
           })
       },
+    },
+    created(){
+      this.ismobile=false;
+
     }
   }
 </script>

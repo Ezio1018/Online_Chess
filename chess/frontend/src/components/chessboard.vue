@@ -4,9 +4,9 @@
     <!-- <chessboard @onMove="showInfo"/> -->
     <justboard/>
     <div class="btns">
-       <el-button type="success" size="big" @click="addDialogVisible = true" >创建私人房间</el-button>
+       <el-button type="success" size="big" @click="addDialogVisible = true;ismobile=false" >创建电脑端房间</el-button>
       
-       <el-button type="success" size="big" @click="addDialogVisible = true" >创建公共房间</el-button>
+       <el-button type="success" size="big" @click="addDialogVisible = true;ismobile=true" >创建手机端房间</el-button>
     </div>
   
     <el-dialog
@@ -59,6 +59,7 @@ export default {
   },
   data () {
     return {
+      ismobile:false,
       currentFen: '',
       positionInfo: null,
       message: "",
@@ -106,7 +107,12 @@ export default {
                   message: response.data.message,
                   type: 'sucess'
                 });
+                if(this.ismobile){
+                this.$router.push({path: '/mobilegame'});
+                }
+                else{
                 this.$router.push({path: '/game'});
+                }
                 localStorage.id = response.data.id
                 localStorage.time = this.addForm.time
                 window.location.reload();
@@ -123,6 +129,7 @@ export default {
 
   },
   created() {
+    this.ismobile=false;
     this.user_id = localStorage.user_id;
   },
 
