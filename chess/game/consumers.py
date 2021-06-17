@@ -33,9 +33,11 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
         try:
             if command == "new-move":#如果command是移动
                 await self.new_move(content["source"],content["target"],content["fen"],content["pgn"])#从target中拿出起始位置和目标位置
+            elif command == "game-over":#如果command是移动
+                await self.game_over(content["result"],content["color"])#从target中拿出起始位置和目标位置
         except:
             pass
-
+    
     async def disconnect(self, code):#取消连接
         await self.disconn()
 
@@ -71,6 +73,27 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                 "name":event["name"]
             })
 
+    async def game_over(self, result, color):
+        await self.channel_layer.group_send(#向频道房间发送移动棋子信息
+            str(self.game_id),
+            {
+                "type": "over.game",
+                "result": result,
+                "color": color,
+                'sender_channel_name': self.channel_name
+            }
+        )
+    
+    async def over_game(self, event):
+        print(event['sender_channel_name'])
+        print(self.channel_name)
+        if self.channel_name != event['sender_channel_name']:
+            await self.send_json({
+                "command":"game-over",
+                "result": event["result"],
+                "color": event["color"],
+            })
+        await self.set_winner(event["color"])
 
     async def new_move(self, source, target,fen,pgn):
         print(source)
@@ -162,7 +185,19 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
             return
         game.fen = fen
         game.pgn = pgn
+        game.status=2
         game.save()
         print("Saving game details")
-            
+    @database_sync_to_async
+    def set_winner(self, color,):
+        game = Game.objects.all().filter(id=self.game_id)[0]
+        if not game:
+            print("Game not found")
+            return
+        if(game.owner_side==color):
+            game.winner=game.owner_id
+        else:
+            game.winner=game.opponent_id
+        game.save()
+        print("end game") 
 

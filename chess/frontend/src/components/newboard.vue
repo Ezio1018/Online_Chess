@@ -24,6 +24,21 @@ export default {
         })
         this.socket.send(JSON.stringify({"command": "new-move","source": orig,"target": dest,"fen": this.game.fen(), "pgn":this.game.pgn()}));
         this.calculatePromotions();
+        if(this.game.in_checkmate()){
+          this.cc=this.toColor()
+          if(this.cc=="white"){
+            this.socket.send(JSON.stringify({"command": "game-over","result": "Black wins!!!","color":"black"}));
+            this.$notify({
+                        title: "Black Wins!!!",
+                    });
+           }
+          else{
+            this.socket.send(JSON.stringify({"command": "game-over","result": "White wins!!!","color":"white"}));
+                          this.$notify({
+                      title:"White Wins!!!",
+                  });
+              }
+        }
       }
       else{
          this.board.set({
@@ -51,11 +66,12 @@ export default {
     },
     initWebSocket() {
       var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
-      var ws_path = ws_scheme + "://127.0.0.1:8000/game/"+this.gameid+"/"+this.user_id;
+      var ws_path = ws_scheme + "://124.71.159.25:8000/game/"+this.gameid+"/"+this.user_id;
       console.log(ws_path);
       this.socket = new WebSocket(ws_path);
       this.socket.onmessage = this.websocketonmessage;
       this.socket.onopen = this.websocketonopen;
+
       // this.socket.onerror = this.websocketonerror;
       this.socket.onclose = this.websocketclose;
     },
@@ -101,6 +117,11 @@ export default {
 
           // this.online="true"
       }
+      else if(data.command=="game-over"){
+          this.$notify({
+                  title: data.result,
+              });
+      }
     },
     websocketsend(Data){//数据发送
       this.socket.send(Data);
@@ -121,6 +142,13 @@ export default {
      this.board.set({
       movable: { events: { after: this.userPlay()} },
     })
+  },
+  onload(){
+    this.initWebSocket();
+
+  },
+  onUnload() {
+    this.socket.close()
   }
 }
 </script>

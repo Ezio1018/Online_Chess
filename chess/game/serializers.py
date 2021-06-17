@@ -6,7 +6,9 @@ from rest_framework import serializers
 class GameInfoSerializer(serializers.Serializer):
     id=serializers.IntegerField()
     owner_id = serializers.CharField()
+    opponent_id = serializers.CharField()
     owner_side= serializers.CharField()
+    winner= serializers.CharField()
     owner_online = serializers.BooleanField()
     time = serializers.CharField()
     CHOICES=(

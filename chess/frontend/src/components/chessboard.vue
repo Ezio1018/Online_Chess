@@ -99,7 +99,7 @@ export default {
             formData.append('regret', this.addForm.regret);
             formData.append('color', this.addForm.color);
           // 成功.
-          this.$axios.post('http://127.0.0.1:8000/api/room', formData)
+          this.$axios.post('http://124.71.159.25:8000/api/room', formData)
             .then(response => {
               if (response.data.status === 0) {
                 this.$notify({

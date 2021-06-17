@@ -52,7 +52,7 @@ export default {
   methods: {
       
     leftCountDown(){
-      this.lLeftTime = this.lLeftTime  - 1000;
+      this.lLeftTime = this.lLeftTime  - 100;
       //定义变量 d,h,m,s保存倒计时的时间
       if (this.lLeftTime >= 0) {
         this.d = Math.floor(this.lLeftTime / 1000 / 60 / 60 / 24);
@@ -69,16 +69,15 @@ export default {
           window.location.reload();
       }
       if(this.flag % 2 == 0 && this.lLeftTime > 0) {
-        setTimeout(this.leftCountDown, 1000);	
+        setTimeout(this.leftCountDown, 100);	
           }
-      
       this.left = this.h + ':' + this.m + ':' + this.s
       
 
     },
     
     rightCountDown(){
-      this.rLeftTime = this.rLeftTime  - 1000;
+      this.rLeftTime = this.rLeftTime  - 100;
       //定义变量 d,h,m,s保存倒计时的时间
       if (this.rLeftTime >= 0) {
         this.d = Math.floor(this.rLeftTime / 1000 / 60 / 60 / 24);
@@ -96,7 +95,7 @@ export default {
           window.location.reload();
       }
       if(this.flag % 2 == 1 && this.rLeftTime > 0) {
-        setTimeout(this.rightCountDown, 1000);	
+        setTimeout(this.rightCountDown, 100);	
           }
       
       this.right = this.h + ':' + this.m + ':' + this.s

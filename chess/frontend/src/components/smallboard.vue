@@ -51,7 +51,7 @@ export default {
     },
     initWebSocket() {
       var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
-      var ws_path = ws_scheme + "://127.0.0.1:8000/game/"+this.gameid+"/"+this.user_id;
+      var ws_path = ws_scheme + "://124.71.159.25:8000/game/"+this.gameid+"/"+this.user_id;
       console.log(ws_path);
       this.socket = new WebSocket(ws_path);
       this.socket.onmessage = this.websocketonmessage;

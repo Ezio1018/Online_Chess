@@ -3,7 +3,7 @@
     <el-row display="margin-top:10px">
       <el-input v-model="input_user_id" placeholder="请输入搜索用户编号"
                 style="display:inline-table; width: 30%; float:left"></el-input>
-      <el-button type="primary" @click="showGame()" style="float:left; margin: 2px;">搜索</el-button>
+      <el-button type="primary" @click="searchGame()" style="float:left; margin: 2px;">搜索</el-button>
     </el-row>
 
     <el-row>
@@ -12,14 +12,14 @@
         <el-table-column label="房主" min-width="100">
           <template slot-scope="scope"> {{ scope.row.owner_id }}</template>
         </el-table-column>
-        <el-table-column label="颜色" min-width="100">
-          <template slot-scope="scope"> {{ scope.row.owner_side }}</template>
+        <el-table-column label="对手" min-width="100">
+          <template slot-scope="scope"> {{ scope.row.opponent_id }}</template>
         </el-table-column>
-        <el-table-column label="时间" min-width="100">
-          <template slot-scope="scope"> {{ scope.row.time }}</template>
+        <el-table-column label="房主颜色" min-width="100">
+          <template slot-scope="scope"> {{ scope.row.owner_side}}</template>
         </el-table-column>
-        <el-table-column label="状态" min-width="100">
-          <template slot-scope="scope"> {{ scope.row.status }}</template>
+        <el-table-column label="胜者" min-width="100">
+          <template slot-scope="scope"> {{ scope.row.winner }}</template>
         </el-table-column>
         <el-table-column label="操作" min-width="100">
           <template slot-scope="scope"><!--作用域插槽-->
@@ -61,7 +61,7 @@
           window.location.reload();
       },
       showGame () {
-        this.$http.get('http://124.71.159.25:8000/api/show_game?user_id=' + this.input_user_id)
+        this.$http.get('http://124.71.159.25:8000/api/show_history?user_id=' + this.user_id)
           .then((response) => {
             var res = JSON.parse(response.bodyText)
             console.log(res)
@@ -75,10 +75,26 @@
             }
           })
       },
+    searchGame(){
+       this.$http.get('http://124.71.159.25:8000/api/search_history?user_id=' + this.user_id+"&search_id="+this.input_user_id)
+          .then((response) => {
+            var res = JSON.parse(response.bodyText)
+            console.log(res)
+            if (res.error_num === 0) {
+              this.gamelist = res['list']
+              
+              
+            } else {
+              this.$message.error('查询房间失败')
+              console.log(res['msg'])
+            }
+          })
     },
-    created(){
-      this.ismobile=false;
+    },
 
+    created(){
+    this.ismobile=false;
+    this.user_id=localStorage.user_id;
     }
   }
 </script>

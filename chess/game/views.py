@@ -160,11 +160,48 @@ def room(request):
 def show_game(request):
     response = {}
     user_id = request.GET.get('user_id','')
+    print(user_id)
     try:
         if user_id == '':
             games = Game.objects.filter(owner_online=True)
         else:
             games = Game.objects.filter(owner_id = user_id,owner_online=True)
+        response['list'] = GameInfoSerializer(games,many=True).data
+        response['msg'] = 'success'
+        response['error_num'] = 0
+    except  Exception as e:
+        response['msg'] = str(e)
+        response['error_num'] = 1
+    return JsonResponse(response)
+
+
+@require_http_methods(["GET"])
+def show_history(request):
+    response = {}
+    user_id = request.GET.get('user_id')
+    try:
+        lname = user_id
+        games=Game.objects.raw('SELECT * FROM game_game WHERE  (owner_id= %s and opponent_id is not null ) or opponent_id=%s', [lname,lname])
+        # games = Game.objects.filter(owner_id = user_id or opponent_id=user_id)
+        response['list'] = GameInfoSerializer(games,many=True).data
+        response['msg'] = 'success'
+        response['error_num'] = 0
+    except  Exception as e:
+        response['msg'] = str(e)
+        response['error_num'] = 1
+    return JsonResponse(response)
+
+
+@require_http_methods(["GET"])
+def search_history(request):
+    response = {}
+    user_id = request.GET.get('user_id')
+    search_id = request.GET.get('search_id')
+    try:
+        games=Game.objects.raw('SELECT * FROM game_game WHERE  id in \
+                              (SELECT id FROM game_game WHERE  (owner_id= %s and opponent_id is not null and winner is not null ) or opponent_id=%s)\
+                              and (opponent_id=%s or owner_id=%s)', [user_id,user_id,search_id,search_id])
+        # games = Game.objects.filter(owner_id = user_id or opponent_id=user_id)
         response['list'] = GameInfoSerializer(games,many=True).data
         response['msg'] = 'success'
         response['error_num'] = 0

@@ -14,6 +14,8 @@
   <el-menu-item index="/chessboard">下棋</el-menu-item>
   <el-menu-item index="/lobby">大厅</el-menu-item>
   <el-menu-item index="/game" :disabled="this.hasGame==false">对局</el-menu-item>
+  <el-menu-item index="/history">战绩</el-menu-item>
+
 
 </el-menu>
 <el-container >
